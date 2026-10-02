@@ -1,5 +1,5 @@
 ###############################################################################
-# Top level CMakeList for building the *EVT_BOARD_NAME* source code
+# Top level CMakeList for building the TPMS source code
 ###############################################################################
 cmake_minimum_required(VERSION 3.15)
 
@@ -25,6 +25,9 @@ elseif(TARGET_DEV STREQUAL "STM32F334x8")
 elseif(TARGET_DEV STREQUAL "STM32F446xx")
     add_compile_definitions(STM32F446xx)
     add_compile_definitions(STM32F4xx)
+elseif(TARGET_DEV STREQUAL "STM32F469xx")
+    add_compile_definitions(STM32F469xx)
+    add_compile_definitions(STM32F4xx)
 else()
     message(FATAL_ERROR "The target device is not supported")
 endif()
@@ -47,7 +50,7 @@ include(${EVT_CORE_DIR}/cmake/evt-core_install.cmake)
 ###############################################################################
 # Project Setup
 ###############################################################################
-set(BOARD_LIB_NAME BOARD_NAME)
+set(BOARD_LIB_NAME REV3-TPMS)
 if("${BOARD_LIB_NAME}" STREQUAL BOARD_NAME)
     message(FATAL_ERROR
             "You must set the template project name in the top-level CMakeLists.txt")
@@ -58,15 +61,17 @@ file(STRINGS version.txt BOARD_VERSION)
 project(${BOARD_LIB_NAME}
         VERSION ${BOARD_VERSION}
         LANGUAGES CXX C
-        )
+)
 
 add_library(${PROJECT_NAME} STATIC)
 
 # Add sources
 target_sources(${PROJECT_NAME} PRIVATE
         src/dev/LED.cpp
-        src/BOARD_NAME.cpp
-        )
+        src/dev/TPMSMain.cpp
+        src/dev/TPMSAux.cpp
+        src/dev/MS5637.cpp
+)
 
 ###############################################################################
 # Handle dependencies
